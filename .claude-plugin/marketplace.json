@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "spring-aop-prompt",
+      "name": "spring-aop",
       "description": "Spring AOP detection and guidance for code review - identifies AOP proxy behavior, self-invocation issues, and transaction boundary problems in Spring projects with progressive loading",
       "source": "./skills/spring-aop-prompt",
       "category": "development",

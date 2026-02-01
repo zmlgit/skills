@@ -1,6 +1,10 @@
 ---
 name: safe-java-code
-description: Java code safety checker for code review - detects concurrency issues, race conditions, unchecked database updates, and common security vulnerabilities. Use when reviewing Java code to identify thread-safety problems, data consistency issues, and unsafe patterns.
+description: Comprehensive Java code safety checker for code review - detects concurrency issues, race conditions, database safety problems, distributed system issues (SAGA, cache consistency), security vulnerabilities, and basic code issues
+version: 1.2.0
+author: zml
+license: MIT
+tags: [java, code-review, security, concurrency, race-condition, database, safety, distributed-systems, financial, high-load, npe, basic-issues]
 ---
 
 # Java 代码安全检查器 (Java Code Safety Checker)

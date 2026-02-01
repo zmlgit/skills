@@ -1,4 +1,13 @@
-# spring-aop-prompt
+---
+name: spring-aop-prompt
+description: Spring AOP detection and guidance for code review - identifies AOP proxy behavior, self-invocation issues, and transaction-related problems in Spring projects with progressive loading
+version: 1.0.0
+author: zml
+license: MIT
+tags: [spring, aop, java, code-review, transaction, backend]
+---
+
+# Spring AOP Prompt
 
 Spring AOP detection and guidance skill for code review agents.
 

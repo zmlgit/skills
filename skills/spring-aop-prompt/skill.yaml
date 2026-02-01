@@ -1,0 +1,86 @@
+name: spring-aop-prompt
+description: Spring AOP detection and guidance for code review agents - helps identify AOP proxy behavior, self-invocation issues, and transaction-related problems in Spring projects
+version: "1.0.0"
+author: zml
+tags:
+  - spring
+  - aop
+  - java
+  - code-review
+  - transaction
+  - backend
+
+# Auto-trigger conditions for /review and code-reviewer agents
+auto_trigger:
+  enabled: true
+  languages:
+    - java
+  frameworks:
+    - spring
+    - spring-boot
+  file_patterns:
+    - "src/main/java/**/*.java"
+    - "**/service/**/*ServiceImpl.java"
+    - "**/repository/**/*.java"
+    - "**/controller/**/*.java"
+  annotation_triggers:
+    - "@Transactional"
+    - "@Aspect"
+    - "@Async"
+    - "@Cacheable"
+    - "@TransactionalEventListener"
+    - "@Service"
+    - "@Component"
+    - "@Repository"
+  config_files:
+    - "application.yml"
+    - "application.properties"
+    - "bootstrap.yml"
+    - "application-*.yml"
+
+# Progressive loading configuration
+progressive_loading:
+  enabled: true
+  core_module: "SKILL.md"
+  detail_modules:
+    - file: "details/transaction-rollback.md"
+      triggers:
+        - "@Transactional.*catch"
+        - "@Transactional.*rollbackFor"
+        - "rollbackFor.*Exception"
+      description: "Transaction rollback edge cases"
+    - file: "details/transaction-boundary.md"
+      triggers:
+        - "@Transactional.*RestTemplate"
+        - "@Transactional.*FeignClient"
+        - "@Transactional.*WebClient"
+        - "RPC.*call"
+      description: "Transaction boundary and RPC issues"
+    - file: "details/event-rpc-message.md"
+      triggers:
+        - "@TransactionalEventListener"
+        - "@Async.*@Transactional"
+        - "@KafkaListener"
+        - "@JmsListener"
+        - "messageQueue.*send"
+      description: "Event, RPC, and messaging integration"
+    - file: "details/cache-concurrency.md"
+      triggers:
+        - "@Cacheable"
+        - "@CacheEvict"
+        - "ThreadLocal"
+        - "ConcurrentHashMap"
+      description: "Cache and concurrency issues"
+    - file: "details/comprehensive-checklist.md"
+      triggers:
+        - "code.*review.*full"
+        - "systematic.*review"
+        - "comprehensive.*check"
+      description: "Full systematic review checklist"
+
+# Integration hints for code-reviewer agents
+integration:
+  priority: "high"  # Load early in review process
+  phase: "analysis"  # Run during code analysis phase
+  conflicts: []     # No conflicts with other skills
+  depends_on: []    # No dependencies

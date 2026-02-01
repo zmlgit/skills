@@ -1,0 +1,147 @@
+name: safe-java-code
+description: Java code safety checker for code review - detects concurrency issues, race conditions, unchecked database updates, distributed system problems (SAGA, cache consistency), common security vulnerabilities, and basic code issues (NPE, array bounds, exception handling). Works for both general Java apps and high-load financial systems.
+version: "1.2.0"
+author: zml
+tags:
+  - java
+  - code-review
+  - security
+  - concurrency
+  - race-condition
+  - database
+  - safety
+  - distributed-systems
+  - financial
+  - high-load
+  - npe
+  - basic-issues
+
+# Auto-trigger conditions for /review and code-reviewer agents
+auto_trigger:
+  enabled: true
+  languages:
+    - java
+  file_patterns:
+    - "src/main/java/**/*.java"
+    - "**/service/**/*Service*.java"
+    - "**/repository/**/*.java"
+    - "**/controller/**/*.java"
+    - "**/manager/**/*.java"
+    - "**/dao/**/*.java"
+  code_triggers:
+    - "synchronized"
+    - "ReentrantLock"
+    - "CountDownLatch"
+    - "volatile"
+    - "AtomicInteger"
+    - "AtomicLong"
+    - "ConcurrentHashMap"
+    - "ThreadLocal"
+    - "@Transactional"
+    - "update"
+    - "delete"
+    - "insert"
+    - "save"
+    - "ExecutorService"
+    - "ThreadPoolExecutor"
+    - "CompletableFuture"
+    - "@Async"
+    - "HashMap()"
+    - "HashSet()"
+    - "SimpleDateFormat"
+    - "redisLock"
+    - "Redisson"
+    - "RedisTemplate"
+    - "FeignClient"
+    - "RestTemplate"
+    - "WebClient"
+    - "transactionTemplate"
+    - "@Saga"
+    - "@Cacheable"
+    - "@CacheEvict"
+    - "\.get\("
+    - "\.charAt\("
+    - "substring"
+    - "catch.*Exception"
+    - "printStackTrace"
+
+# Progressive loading configuration
+progressive_loading:
+  enabled: true
+  core_module: "SKILL.md"
+  detail_modules:
+    - file: "details/distributed-systems.md"
+      triggers:
+        - "@Transactional.*redisLock"
+        - "redisLock.*lock"
+        - "Redisson.*lock"
+        - "FeignClient"
+        - "RestTemplate"
+        - "transactionTemplate"
+        - "@Saga"
+        - "redisTemplate.*delete"
+        - "redisTemplate.*set"
+      description: "Distributed systems - lock/transaction ordering, SAGA, cache consistency"
+    - file: "details/concurrency.md"
+      triggers:
+        - "synchronized"
+        - "ReentrantLock"
+        - "ConcurrentHashMap"
+        - "volatile"
+        - "AtomicInteger"
+        - "ThreadLocal"
+      description: "Concurrency and thread-safety patterns"
+    - file: "details/race-conditions.md"
+      triggers:
+        - "if.*map.*contains"
+        - "double.*check"
+        - "check.*then.*act"
+        - "HashMap"
+        - "HashSet"
+        - "SimpleDateFormat"
+      description: "Race condition detection"
+    - file: "details/database-safety.md"
+      triggers:
+        - "@Transactional"
+        - "\.update\("
+        - "\.delete\("
+        - "\.insert\("
+        - "\.save\("
+        - "repository\."
+        - "mapper\."
+        - "dao\."
+      description: "Database operation safety checks"
+    - file: "details/async-execution.md"
+      triggers:
+        - "@Async"
+        - "ExecutorService"
+        - "ThreadPoolExecutor"
+        - "CompletableFuture"
+        - "Future"
+      description: "Async execution and thread pool safety"
+    - file: "details/basic-code-issues.md"
+      triggers:
+        - "\.get\("
+        - "\.charAt\("
+        - "\.substring\("
+        - "\.get\(.*\)\."
+        - "catch.*Exception"
+        - "catch.*\{.*\}"
+        - "printStackTrace"
+        - "= null"
+        - "== null"
+        - "!= null"
+      description: "Basic code issues - NPE, array bounds, exception handling"
+    - file: "details/comprehensive-checklist.md"
+      triggers:
+        - "full.*review"
+        - "comprehensive.*check"
+        - "systematic.*audit"
+      description: "Full systematic review checklist"
+
+# Integration hints for code-reviewer agents
+integration:
+  priority: "high"
+  phase: "analysis"
+  conflicts: []
+  depends_on: []
